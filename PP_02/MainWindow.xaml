@@ -1,0 +1,107 @@
+﻿<Window x:Class="PP_02.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PP_02"
+        xmlns:viewModel="clr-namespace:PP_02.ViewModels"
+        xmlns:utils="clr-namespace:PP_02.Utils"
+        mc:Ignorable="d"
+        Title="Услуги школы" Height="600" Width="900">
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ColorDictionary.xaml"/>
+                <ResourceDictionary Source="/Resources/MainDictionaty.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <viewModel:AdminAuthViewModel x:Key="AdminAuthViewModel"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Background="{StaticResource AdditiveFond}">
+        <Grid x:Name="MainViewModelControl" Margin="15,8" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="1" 
+                            Margin="0, 10px, 0, 0"
+                            Background="{StaticResource AdditiveFond}"
+                            x:Name="MainContentControl"
+                            Content="{Binding Source={x:Static utils:FrameManager.Context}, Path=CurrentViewModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <DockPanel Grid.Row="0" >
+                <Image Source="/Resources/school_logo.png" Margin="0,0,20,0"/>
+
+                <DockPanel HorizontalAlignment="Right">
+                    <ToggleButton x:Name="AdminAuthToggleButton"
+                                  Content="Войти в режим администратора" 
+                                  HorizontalAlignment="Right">
+                        <ToggleButton.Style>
+                            <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type ToggleButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                    <Popup 
+                        AllowsTransparency="True"
+                        IsOpen="{Binding IsChecked, ElementName=AdminAuthToggleButton}" 
+                        StaysOpen="False" 
+                        Height="auto" Width="200px">
+                        <Border 
+                            Background="{StaticResource MainFond}" 
+                            BorderThickness="0.5" 
+                            BorderBrush="{StaticResource FocusingAttention}">
+                            <Grid Margin="10px">
+                                <ContentControl
+                                            Content="{Binding Source={StaticResource AdminAuthViewModel}, Mode=TwoWay, Path=., UpdateSourceTrigger=PropertyChanged}"
+                                            />
+                            </Grid>
+                        </Border>
+                        <Popup.Style>
+                            <Style TargetType="{x:Type Popup}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Popup.Style>
+                    </Popup>
+                    <Button Content="Выйти из адмнистратора" 
+                            Command="{Binding LogoutAdminCommand}"
+                            HorizontalAlignment="Right">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="GoBackPageButton"  
+                        Content="Назад" 
+                        IsEnabled="{Binding Source={x:Static utils:FrameManager.Context}, Path=CanGoBack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{Binding GoBackPageCommand}"/>
+                </DockPanel>
+            
+            </DockPanel>
+        </Grid>
+    </Border>
+</Window>

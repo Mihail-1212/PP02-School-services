@@ -1,0 +1,198 @@
+﻿<UserControl x:Class="PP_02.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PP_02.Views"
+             xmlns:converters="clr-namespace:PP_02.Converters"
+             xmlns:viewModel="clr-namespace:PP_02.ViewModels"
+             xmlns:utils="clr-namespace:PP_02.Utils"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ColorDictionary.xaml"/>
+                <ResourceDictionary Source="/Resources/MainDictionaty.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <local:EditServiceView x:Key="EditServiceView"/>
+            <converters:RadioTagConverter x:Key="RadioTagConverter"/>
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}" x:Key="AdminOnlyButtons">
+                <Style.Triggers>
+                    <DataTrigger Value="False" Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                    <DataTrigger Value="True" Binding="{Binding Source={x:Static utils:AdminManager.Context}, Path=IsAuth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Style="{StaticResource MainGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Сортировка по цене">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Content="По возрастанию"
+                                 GroupName="CostSort" 
+                                 IsChecked="{Binding Path=CurrentSort, Mode=TwoWay, Converter={StaticResource RadioTagConverter}, ConverterParameter={x:Static utils:Sort.asc}}"  
+                                 />
+                    <RadioButton Content="По убыванию" 
+                                 GroupName="CostSort"
+                                 IsChecked="{Binding Path=CurrentSort, Mode=TwoWay, Converter={StaticResource RadioTagConverter}, ConverterParameter={x:Static utils:Sort.desc}}"  
+                                 />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Width="200px" Header="Сортировка по стоимости">
+                <ComboBox 
+                      ItemsSource="{Binding DiscountList}"
+                      DisplayMemberPath="Label"
+                      SelectedValue="{Binding CurrentDiscountItem}"
+                      />
+            </GroupBox>
+
+            <GroupBox Header="Фильтрация услуг по названию и описанию" Grid.Row="1" Grid.ColumnSpan="2">
+                <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+        </Grid>
+
+        <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Text="{Binding Sample, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Button Content="Создать услугу" 
+                Style="{StaticResource AdminOnlyButtons}"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,0"
+                Grid.Row="2" 
+                Command="{Binding ChangeCreateServiceCommand}" />
+
+        <Button Content="Список ближайших записей" 
+                Style="{StaticResource AdminOnlyButtons}"
+                HorizontalAlignment="Right"
+                Margin="0,0,0,0"
+                Grid.Column="1"
+                Grid.Row="2" 
+                Command="{Binding ChangeClientServiceListCommand}" />
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,10px" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding ServiceList}">
+                <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Height="200px" BorderThickness="0.5" BorderBrush="{StaticResource FocusingAttention}" Margin="0,5px">
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="Background" Value="#FFCDD6EE"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Discount}" Value="0">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Border.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary Source="/Resources/ColorDictionary.xaml"/>
+                                        <ResourceDictionary Source="/Resources/MainDictionaty.xaml"/>
+                                    </ResourceDictionary.MergedDictionaries>
+                                </ResourceDictionary>
+                            </Border.Resources>
+                            <Grid Margin="5px">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.RowSpan="4" 
+                                        Width="200px" 
+                                        Margin="0,0,10px,0" 
+                                        BorderThickness="0.5" 
+                                        BorderBrush="{StaticResource FocusingAttention}">
+                                    <Image Stretch="Uniform" Source="{Binding GetFullPhoto}"/>
+                                </Border>
+                                <TextBlock Text="{Binding Title}" Grid.Column="1"/>
+                                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock 
+                                        Text="{Binding Cost, StringFormat={}{0:F2}}"
+                                        TextDecorations="Strikethrough">
+                                        <TextBlock.Style>
+                                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Discount}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock >
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{} {0:F2} рублей за {1:F0} минут">
+                                                <Binding Path="TotalCost"/>
+                                                <Binding Path="DurationInMinutes"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock 
+                                    Grid.Column="1" Grid.Row="2"
+                                    Text="{Binding Discount, StringFormat={}* скидка {0:0.00%}}">
+                                    <TextBlock.Style>
+                                        <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Discount}" Value="0">
+                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                                    <Button Content="Редактировать" 
+                                            Style="{StaticResource AdminOnlyButtons}"
+                                            Command="{Binding Path=DataContext.ChangeEditServiceCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource AdminOnlyButtons}"
+                                            Command="{Binding Path=DataContext.ServiceDeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}"
+                                            />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

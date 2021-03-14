@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:PP_02.Resources">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Resources/ColorDictionary.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="ParentControlStyle" TargetType="{x:Type Control}">
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    
+    <Style BasedOn="{StaticResource ParentControlStyle}" TargetType="{x:Type ButtonBase}">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FocusingAttention}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource FocusingAttention}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource {x:Type ButtonBase}}" TargetType="{x:Type Button}"></Style>
+    <Style BasedOn="{StaticResource {x:Type ButtonBase}}" TargetType="{x:Type ToggleButton}"></Style>
+    <Style BasedOn="{StaticResource {x:Type ButtonBase}}" TargetType="{x:Type RadioButton}">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style TargetType="{x:Type GroupBox}">
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource ParentControlStyle}" TargetType="{x:Type TextBox}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Padding" Value="2,1"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FocusingAttention}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource FocusingAttention}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource ParentControlStyle}" TargetType="{x:Type ComboBox}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Padding" Value="2,1"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FocusingAttention}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource FocusingAttention}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource ParentControlStyle}" TargetType="{x:Type DatePicker}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Padding" Value="2,1"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Foreground" Value="{StaticResource FocusingAttention}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource FocusingAttention}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource ParentControlStyle}" TargetType="{x:Type DataGrid}">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style TargetType="{x:Type Grid}" x:Key="MainGrid">
+        <Setter Property="Background" Value="{StaticResource MainFond}"/>
+    </Style>
+
+</ResourceDictionary>

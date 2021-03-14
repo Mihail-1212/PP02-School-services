@@ -1,0 +1,26 @@
+﻿<Application x:Class="PP_02.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PP_02"
+             xmlns:viewModel="clr-namespace:PP_02.ViewModels"
+             xmlns:view="clr-namespace:PP_02.Views"
+             StartupUri="MainWindow.xaml">
+    <!-- В этом файл соединяется view_model с view -->
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewModel:MainViewModel}">
+            <view:MainView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:EditServiceViewModel}">
+            <view:EditServiceView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:AdminAuthViewModel}">
+            <view:AdminAuthView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ClientServiceViewModel}">
+            <view:ClientServiceView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ClientServiceListViewModel}">
+            <view:ClientServiceListView/>
+        </DataTemplate>
+    </Application.Resources>
+</Application>
